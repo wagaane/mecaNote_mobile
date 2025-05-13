@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "248261084040",
+    "project_id": "mecanote-cbce9",
+    "storage_bucket": "mecanote-cbce9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248261084040:android:c6e1e6e8ae277742aff03d",
+        "android_client_info": {
+          "package_name": "com.wagaane.meca_note_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABJJCCPQw11tgRfSP0r9EqlG6rnbl3294"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
