@@ -12,7 +12,20 @@
           "package_name": "com.wagaane.meca_note_mobile"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "248261084040-eou90eiblfcsjvpkr80v70h5o3qtk6bf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wagaane.meca_note_mobile",
+            "certificate_hash": "1c61d9b3fd4f68f65e8d7ad34b676ac648e7e24a"
+          }
+        },
+        {
+          "client_id": "248261084040-n1bbmiiu1pitsji7q21uo6opglsd473m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyABJJCCPQw11tgRfSP0r9EqlG6rnbl3294"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248261084040-n1bbmiiu1pitsji7q21uo6opglsd473m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "248261084040-33a27ej04obckog8o37r7v2b9t4s69t1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wagaane.mecaNoteMobile"
+              }
+            }
+          ]
         }
       }
     }
