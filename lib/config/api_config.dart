@@ -1,9 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConfig{
-  // static String baseUrl = "http://192.168.100.145:9000/api/v1/mecanote/";
-  static String baseUrl = "http://192.168.10.12:9000/api/v1/mecanote/";
-  // static String baseUrl = "http://localhost:7002/api/v1/mecanote/";
+  static String baseUrl = "http://localhost:9002/api/v1/mecanote/";
+  // static String baseUrl = "http://192.168.100.131:9001/api/v1/mecanote/";
+  // static String baseUrl = "http://192.168.10.12:9000/api/v1/mecanote/";
+  // static String baseUrl = "http://192.168.1.63:9000/api/v1/mecanote/";
+  // static String baseUrl = "http://10.0.0.2:9000/api/v1/mecanote/";
 
   // GET THE TOKEN
   static Future<String> getToken() async{
@@ -25,6 +27,12 @@ class ApiConfig{
     preferences.setString("username", response['data']['payload']['username']);
     preferences.setString("role", response['data']['payload']['role']);
   }
+  static Future<void> setDataSignWithGoogle(response) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("token", response['payload']['token']);
+    preferences.setString("username", response['payload']['username']);
+    preferences.setString("role", response['payload']['role']);
+  }
 
 
 
@@ -34,6 +42,11 @@ class ApiConfig{
   }
 
   static Future<String> getUsername() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('username') ?? '';
+  }
+
+  static Future<String> getRole() async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString('role') ?? '';
   }

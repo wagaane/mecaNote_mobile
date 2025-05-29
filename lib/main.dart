@@ -3,8 +3,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meca_note_mobile/auth/login_screen.dart';
+import 'package:meca_note_mobile/auth/register_screen.dart';
 import 'package:meca_note_mobile/back-office/client/dashboard_client_screen.dart';
 import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
+import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
 import 'package:meca_note_mobile/welcome_screen.dart';
@@ -51,6 +53,7 @@ class _MyAppState extends State<MyApp> {
     _initApp();
   }
 
+  String _user = '';
   bool _isOk = false;
   bool _isMecano = true;
   _initApp() async {
@@ -61,7 +64,10 @@ class _MyAppState extends State<MyApp> {
     await Future.delayed(const Duration(seconds: 5));
 
     var token = await ApiConfig.getToken();
-    var user = await ApiConfig.getUsername();
+    var user = await ApiConfig.getRole();
+    setState(() {
+      _user = user;
+    });
     if (token.isNotEmpty) {
       setState(() {
         _isOk = true;
@@ -98,6 +104,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: 'Inter',
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+          hintColor: Colors.black,
           useMaterial3: true,
         ),
         navigatorKey: navigatorKey,
@@ -106,20 +113,21 @@ class _MyAppState extends State<MyApp> {
           '/dashboard-mecano-demands': (context) => const DashboardMecanoScreen(),
           // '/demands': (context) => DetailsPage(),
         },
-        home: LoginScreen());
-        // _isLoading
-        //     ? Scaffold(
-        //         backgroundColor: Colors.white,
-        //         body: Center(
-        //           child: Column(
-        //             mainAxisAlignment: MainAxisAlignment.center,
-        //             children: [
-        //               Image.asset('assets/logo.png', width: 200,height: 200,),
-        //             ],
-        //           ),
-        //         ))
-        //     : _isOk
-        //         ? (_isMecano ? const DashboardMecanoScreen() : const DashboardClientScreen())
-        //         : const WelcomeScreen());
+        home:
+        // RegisterScreen());
+        _isLoading
+            ? Scaffold(
+                backgroundColor: Colors.white,
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/logo.png', width: 200,height: 200,),
+                    ],
+                  ),
+                ))
+            : _user == 'UNKNOW'  ? const UnknowUserScreen() : ( _isOk
+                ? (_isMecano ? const DashboardMecanoScreen() : const DashboardClientScreen())
+                : const WelcomeScreen()));
   }
 }

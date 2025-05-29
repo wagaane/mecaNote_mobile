@@ -4,6 +4,7 @@ import 'package:meca_note_mobile/back-office/mecanicien/add_remove_domain_activi
 import 'package:meca_note_mobile/models/demand_model.dart';
 import 'package:meca_note_mobile/models/domaine_mecano_model.dart';
 import 'package:meca_note_mobile/models/enums/StatusEnum.dart';
+import 'package:meca_note_mobile/services/auth_service.dart';
 import 'package:meca_note_mobile/services/domaine_mecano_service.dart';
 import 'package:meca_note_mobile/utils/date_utili.dart';
 import 'package:meca_note_mobile/utils/notification_helper.dart';
@@ -27,12 +28,23 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
   String _title = 'Domaines d\'activités';
   final _searchController = TextEditingController();
   late int _notReadedDemands = 0;
+  bool _isInfos = true;
+  bool _isPass = false;
 
   @override
   void initState() {
     super.initState();
     _getDomainesMecanos();
     _getLenDemands();
+    _getUserInfo();
+  }
+
+  _getUserInfo()async{
+    var response = await AuthService.getConnectedUser();
+    print('La reponse : $response');
+    _telephone.text = response['payload']['telephone'];
+    _prenom.text = response['payload']['prenom'];
+    _nom.text = response['payload']['nom'];
   }
 
   final ScrollController _scrollController = ScrollController();
@@ -76,7 +88,7 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
         page, size, prenom, nom, status, filter, date, adresse);
     print(response);
     setState(() {
-      _demands =DemandModel.fromList(response['payload']);
+      _demands = DemandModel.fromList(response['payload']);
       _totalPages = response['metadata']['totalPages'];
       _loading = false;
     });
@@ -123,75 +135,77 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          _selectedPage == 2 ? Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: DropdownButton<String>(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              dropdownColor: Colors.white,
-              icon: const Icon(Icons.more_vert),
-              underline: const SizedBox(), // pour retirer la ligne sous le bouton
-              onChanged: (String? newValue) async {
-                if(newValue != _seletedDemande){
-                  setState(() {
-                    _page = 0;
-                  });
-                  switch (newValue) {
-                    case 'rejeter':
-                      setState(() {
-                        _seletedDemande = "rejeter";
-                      });
-                      await _getDemands(status: StatusEnum.REJETER.name);
-                      break;
-                    case 'valider':
-                      setState(() {
-                        _seletedDemande = "valider";
-                      });
-                      await _getDemands(status: StatusEnum.VALIDER.name);
-                      break;
-                    case 'soumis':
-                      setState(() {
-                        _seletedDemande = "soumis";
-                      });
-                      await _getDemands(status: StatusEnum.SOUMIS.name);
-                      break;
-                  }
-                }
-
-              },
-              items: [
-                const DropdownMenuItem(
-                  value: 'rejeter',
-                  child: Text('rejeter'),
-                ),
-                const DropdownMenuItem(
-                  value: 'valider',
-                  child: Text('valider'),
-                ),
-                DropdownMenuItem(
-                  value: 'soumis',
-                  child: Row(
-                    children: [
-                      const Text('à valider'),
-                      const SizedBox(
-                        width: 5,
+          _selectedPage == 2
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: DropdownButton<String>(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    dropdownColor: Colors.white,
+                    icon: const Icon(Icons.more_vert),
+                    underline:
+                        const SizedBox(), // pour retirer la ligne sous le bouton
+                    onChanged: (String? newValue) async {
+                      if (newValue != _seletedDemande) {
+                        setState(() {
+                          _page = 0;
+                        });
+                        switch (newValue) {
+                          case 'rejeter':
+                            setState(() {
+                              _seletedDemande = "rejeter";
+                            });
+                            await _getDemands(status: StatusEnum.REJETER.name);
+                            break;
+                          case 'valider':
+                            setState(() {
+                              _seletedDemande = "valider";
+                            });
+                            await _getDemands(status: StatusEnum.VALIDER.name);
+                            break;
+                          case 'soumis':
+                            setState(() {
+                              _seletedDemande = "soumis";
+                            });
+                            await _getDemands(status: StatusEnum.SOUMIS.name);
+                            break;
+                        }
+                      }
+                    },
+                    items: [
+                      const DropdownMenuItem(
+                        value: 'rejeter',
+                        child: Text('rejeter'),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(100)),
-                            color: Colors.red[400]),
-                        child: Text(
-                          '$_notReadedDemands',
-                          style: const TextStyle(color: Colors.white),
+                      const DropdownMenuItem(
+                        value: 'valider',
+                        child: Text('valider'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'soumis',
+                        child: Row(
+                          children: [
+                            const Text('à valider'),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(100)),
+                                  color: Colors.red[400]),
+                              child: Text(
+                                '$_notReadedDemands',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            )
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ) : const SizedBox.shrink()
+                )
+              : const SizedBox.shrink()
         ],
         backgroundColor: Colors.white,
         elevation: 0,
@@ -231,9 +245,15 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
               },
             )
           : const Center(),
-      body: _loading ? Center(child: CircularProgressIndicator(color: ColorWidget.blue,),) : SingleChildScrollView(
-        child: _selectedPageScreen(_selectedPage),
-      ),
+      body: _loading
+          ? Center(
+              child: CircularProgressIndicator(
+                color: ColorWidget.blue,
+              ),
+            )
+          : SingleChildScrollView(
+              child: _selectedPageScreen(_selectedPage),
+            ),
     );
   }
 
@@ -437,7 +457,6 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
                 _seletedDemande = '';
               });
               if (_demands.isEmpty) {
-
                 await _getDemands();
               }
               Navigator.pop(context);
@@ -491,6 +510,7 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
             onTap: () async {
               SharedPreferences _pref = await SharedPreferences.getInstance();
               _pref.clear();
+              await AuthService.signOutUser();
               Navigator.push<void>(
                 context,
                 MaterialPageRoute<void>(
@@ -622,15 +642,237 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
     );
   }
 
+  final _prenom = TextEditingController();
+  final _nom = TextEditingController();
+  final _telephone = TextEditingController();
   SingleChildScrollView _profileInfos(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(color: Colors.white),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+
+            children: [
+              Container(
+                height: 50,
+                decoration: const  BoxDecoration(
+                ),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isInfos = true;
+                          _isPass = false;
+                        });
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width /2 - 15,
+                        decoration:  BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+
+                            color: _isInfos ?  ColorWidget.blue : Colors.white
+                        ),
+                        child: Center(child: Text("Mes informations", style: TextStyle(color: _isInfos ? Colors.white : ColorWidget.blue, fontWeight: FontWeight.bold),),),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isInfos = false;
+                          _isPass = true;
+                        });
+                      },
+                      child: Container(
+
+                        width: MediaQuery.of(context).size.width / 2 - 15,
+
+                        decoration:  BoxDecoration(
+                            border: Border.all(color: Colors.black12),
+
+                            color: _isPass ? ColorWidget.blue : ColorWidget.white
+                        ),
+                        child:  Center(child: Text("Mot de passe", style: TextStyle(color: _isPass ?  Colors.white : ColorWidget.blue, fontWeight: FontWeight.bold),),),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _isInfos ?
+              SizedBox(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextField(
+                      controller: _prenom,
+                      decoration: const InputDecoration(
+                          hintText: "Prénom",
+                          labelText: "Prénom",
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      controller: _nom,
+                      decoration: const InputDecoration(
+                          hintText: "Nom",
+                          labelText: "Nom",
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      controller: _telephone,
+                      decoration: const InputDecoration(
+                          hintText: "Téléphone",
+                          labelText: "Téléphone",
+                          border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Row(
+                      children: [
+                        Text(
+                          "Photo profil : ",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          // color: Colors.red,
+                            border: Border.all(color: ColorWidget.blue!, width: 0.3),
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                        child: Center(
+                          child: Icon(
+                            Icons.photo_camera_outlined,
+                            size: 50,
+                            color: ColorWidget.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () async{
+                        var response = await AuthService.editUserProfile({
+                          'prenom': _prenom.text,
+                          'nom': _nom.text,
+                          'telephone': _telephone.text
+                        });
+
+                        print('mise a jour : $response');
+                            },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: ColorWidget.blue,
+                            border: Border.all(color: ColorWidget.blue!, width: 0.3),
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Mettre à jour profil ",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            ),
+                            Icon(
+                              Icons.check,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ) :   Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: SizedBox(
+                  child: Column(
+                    children: [
+                      const TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock),
+                            suffixIcon: Icon(Icons.remove_red_eye),
+                            hintText: "Ancien mot de passe",
+                            labelText: "Ancien mot de passe",
+                            border: OutlineInputBorder(
+                          )
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      const TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: Icon(Icons.remove_red_eye),
+                            hintText: "Nouveau mot de passe",
+                            labelText: "Nouveau mot de passe",
+                            border: OutlineInputBorder()
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      const TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: Icon(Icons.remove_red_eye),
+                            hintText: "Confirmation",
+                            labelText: "Confirmation",
+                          border: OutlineInputBorder()
+                        ),
+                      ),
+                      const SizedBox(height: 20,),
+                      GestureDetector(
+                        child: Container(
+                          height: 50,
+                          width: double.infinity,
+                          decoration:  BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              color: ColorWidget.blue,
+                          ),
+                          child: const Center(child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Modifier", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),),
+                              SizedBox(width: 10.0,),
+                              Icon(Icons.edit_outlined, color: Colors.white,)
+                            ],
+                          )),
+                        ),
+                      )
+
+                    ],
+                  ),
+                ),
+              ),
+
+            ],
+          ),
         ),
       ),
     );
@@ -714,9 +956,9 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
                                       style: TextStyle(
                                           color: ColorWidget.black54,
                                           fontWeight: FontWeight.w600,
-                                        fontSize: 12
-                                          )),
-                                  Text("${DateUtil.timeAgo(demand.dateCreation)}")
+                                          fontSize: 12)),
+                                  Text(
+                                      "${DateUtil.timeAgo(demand.dateCreation)}")
                                 ],
                               ),
                               leading: CircleAvatar(
