@@ -27,6 +27,9 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
   int _selectedPage = 0;
   String _title = 'Domaines d\'activités';
   final _searchController = TextEditingController();
+  final _oldPassController = TextEditingController();
+  final _newPassController = TextEditingController();
+  final _confPassController = TextEditingController();
   late int _notReadedDemands = 0;
   bool _isInfos = true;
   bool _isPass = false;
@@ -39,7 +42,7 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
     _getUserInfo();
   }
 
-  _getUserInfo()async{
+  _getUserInfo() async {
     var response = await AuthService.getConnectedUser();
     print('La reponse : $response');
     _telephone.text = response['payload']['telephone'];
@@ -654,12 +657,10 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
-
             children: [
               Container(
                 height: 50,
-                decoration: const  BoxDecoration(
-                ),
+                decoration: const BoxDecoration(),
                 child: Row(
                   children: [
                     GestureDetector(
@@ -670,13 +671,19 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
                         });
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width /2 - 15,
-                        decoration:  BoxDecoration(
+                        width: MediaQuery.of(context).size.width / 2 - 15,
+                        decoration: BoxDecoration(
                             border: Border.all(color: Colors.black12),
-
-                            color: _isInfos ?  ColorWidget.blue : Colors.white
+                            color: _isInfos ? ColorWidget.blue : Colors.white),
+                        child: Center(
+                          child: Text(
+                            "Mes informations",
+                            style: TextStyle(
+                                color:
+                                    _isInfos ? Colors.white : ColorWidget.blue,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        child: Center(child: Text("Mes informations", style: TextStyle(color: _isInfos ? Colors.white : ColorWidget.blue, fontWeight: FontWeight.bold),),),
                       ),
                     ),
                     GestureDetector(
@@ -687,190 +694,239 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
                         });
                       },
                       child: Container(
-
                         width: MediaQuery.of(context).size.width / 2 - 15,
-
-                        decoration:  BoxDecoration(
+                        decoration: BoxDecoration(
                             border: Border.all(color: Colors.black12),
-
-                            color: _isPass ? ColorWidget.blue : ColorWidget.white
+                            color:
+                                _isPass ? ColorWidget.blue : ColorWidget.white),
+                        child: Center(
+                          child: Text(
+                            "Mot de passe",
+                            style: TextStyle(
+                                color:
+                                    _isPass ? Colors.white : ColorWidget.blue,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        child:  Center(child: Text("Mot de passe", style: TextStyle(color: _isPass ?  Colors.white : ColorWidget.blue, fontWeight: FontWeight.bold),),),
                       ),
                     ),
                   ],
                 ),
               ),
-              _isInfos ?
-              SizedBox(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    TextField(
-                      controller: _prenom,
-                      decoration: const InputDecoration(
-                          hintText: "Prénom",
-                          labelText: "Prénom",
-                          border: OutlineInputBorder()),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: _nom,
-                      decoration: const InputDecoration(
-                          hintText: "Nom",
-                          labelText: "Nom",
-                          border: OutlineInputBorder()),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: _telephone,
-                      decoration: const InputDecoration(
-                          hintText: "Téléphone",
-                          labelText: "Téléphone",
-                          border: OutlineInputBorder()),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Row(
-                      children: [
-                        Text(
-                          "Photo profil : ",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          // color: Colors.red,
-                            border: Border.all(color: ColorWidget.blue!, width: 0.3),
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                        child: Center(
-                          child: Icon(
-                            Icons.photo_camera_outlined,
-                            size: 50,
-                            color: ColorWidget.blue,
+              _isInfos
+                  ? SizedBox(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 30,
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () async{
-                        var response = await AuthService.editUserProfile({
-                          'prenom': _prenom.text,
-                          'nom': _nom.text,
-                          'telephone': _telephone.text
-                        });
+                          TextField(
+                            controller: _prenom,
+                            decoration: const InputDecoration(
+                                hintText: "Prénom",
+                                labelText: "Prénom",
+                                border: OutlineInputBorder()),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            controller: _nom,
+                            decoration: const InputDecoration(
+                                hintText: "Nom",
+                                labelText: "Nom",
+                                border: OutlineInputBorder()),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            controller: _telephone,
+                            decoration: const InputDecoration(
+                                hintText: "Téléphone",
+                                labelText: "Téléphone",
+                                border: OutlineInputBorder()),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Row(
+                            children: [
+                              Text(
+                                "Photo profil : ",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  // color: Colors.red,
+                                  border: Border.all(
+                                      color: ColorWidget.blue!, width: 0.3),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10))),
+                              child: Center(
+                                child: Icon(
+                                  Icons.photo_camera_outlined,
+                                  size: 50,
+                                  color: ColorWidget.blue,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              var response = await AuthService.editUserProfile({
+                                'prenom': _prenom.text,
+                                'nom': _nom.text,
+                                'telephone': _telephone.text
+                              });
 
-                        print('mise a jour : $response');
+                              print('mise a jour : $response');
+                              if (response['status'] == 'OK') {
+                                NotificationHelper.success(
+                                    context, response['message']);
+                              } else {
+                                NotificationHelper.error(
+                                    context, response['message']);
+                              }
                             },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: ColorWidget.blue,
-                            border: Border.all(color: ColorWidget.blue!, width: 0.3),
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: ColorWidget.blue,
+                                  border: Border.all(
+                                      color: ColorWidget.blue!, width: 0.3),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10))),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Mettre à jour profil ",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  ),
+                                  Icon(
+                                    Icons.check,
+                                    size: 30,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: SizedBox(
+                        child: Column(
                           children: [
-                            Text(
-                              "Mettre à jour profil ",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
+                            TextField(
+                              controller: _oldPassController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.lock),
+                                  suffixIcon: Icon(Icons.remove_red_eye),
+                                  hintText: "Ancien mot de passe",
+                                  labelText: "Ancien mot de passe",
+                                  border: OutlineInputBorder()),
                             ),
-                            Icon(
-                              Icons.check,
-                              size: 30,
-                              color: Colors.white,
+                            const SizedBox(
+                              height: 10,
                             ),
+                            TextField(
+                              controller: _newPassController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.lock),
+                                  suffixIcon: Icon(Icons.remove_red_eye),
+                                  hintText: "Nouveau mot de passe",
+                                  labelText: "Nouveau mot de passe",
+                                  border: OutlineInputBorder()),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: _confPassController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.lock),
+                                  suffixIcon: Icon(Icons.remove_red_eye),
+                                  hintText: "Confirmation",
+                                  labelText: "Confirmation",
+                                  border: OutlineInputBorder()),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                if (_confPassController.text ==
+                                    _newPassController.text) {
+                                  var data = {
+                                    "oldPass":
+                                        _oldPassController.text,
+                                    "newPass":
+                                        _newPassController.text,
+                                  };
+                                  var response =
+                                      await AuthService.editPasswordController(data);
+                                  print("Response: $response");
+                                } else {
+                                  NotificationHelper.error(context,
+                                      "'Nouveau mot de passe' et 'confirmation' ne sont pas conformes");
+                                }
+                              },
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: ColorWidget.blue,
+                                ),
+                                child: const Center(
+                                    child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Modifier",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Icon(
+                                      Icons.edit_outlined,
+                                      color: Colors.white,
+                                    )
+                                  ],
+                                )),
+                              ),
+                            )
                           ],
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ) :   Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: SizedBox(
-                  child: Column(
-                    children: [
-                      const TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(Icons.remove_red_eye),
-                            hintText: "Ancien mot de passe",
-                            labelText: "Ancien mot de passe",
-                            border: OutlineInputBorder(
-                          )
-                        ),
-                      ),
-                      const SizedBox(height: 10,),
-                      const TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(Icons.remove_red_eye),
-                            hintText: "Nouveau mot de passe",
-                            labelText: "Nouveau mot de passe",
-                            border: OutlineInputBorder()
-                        ),
-                      ),
-                      const SizedBox(height: 10,),
-                      const TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(Icons.remove_red_eye),
-                            hintText: "Confirmation",
-                            labelText: "Confirmation",
-                          border: OutlineInputBorder()
-                        ),
-                      ),
-                      const SizedBox(height: 20,),
-                      GestureDetector(
-                        child: Container(
-                          height: 50,
-                          width: double.infinity,
-                          decoration:  BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                              color: ColorWidget.blue,
-                          ),
-                          child: const Center(child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Modifier", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),),
-                              SizedBox(width: 10.0,),
-                              Icon(Icons.edit_outlined, color: Colors.white,)
-                            ],
-                          )),
-                        ),
-                      )
-
-                    ],
-                  ),
-                ),
-              ),
-
+                    ),
             ],
           ),
         ),
