@@ -1,0 +1,2 @@
+/Users/macbook/Desktop/mecaNote_Project/mecaNote/android/app/.cxx/Debug/1x1k5xm3/x86/CMakeFiles/edit_cache.dir
+/Users/macbook/Desktop/mecaNote_Project/mecaNote/android/app/.cxx/Debug/1x1k5xm3/x86/CMakeFiles/rebuild_cache.dir
