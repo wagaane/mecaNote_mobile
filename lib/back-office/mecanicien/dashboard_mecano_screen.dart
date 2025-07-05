@@ -45,7 +45,7 @@ class _DashboardMecanoScreenState extends State<DashboardMecanoScreen> {
   _getUserInfo() async {
     var response = await AuthService.getConnectedUser();
     print('La reponse : $response');
-    _telephone.text = response['payload']['telephone'];
+    _telephone.text = response['payload']['telephone'] ?? '';
     _prenom.text = response['payload']['prenom'];
     _nom.text = response['payload']['nom'];
   }

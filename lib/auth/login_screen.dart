@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meca_note_mobile/back-office/client/dashboard_client_screen.dart';
+import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
 import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
 import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         context,
                                         MaterialPageRoute<void>(
                                           builder: (BuildContext context) =>
-                                              const DashboardClientScreen(),
+                                              const HomeClientScreen(),
                                         ),
                                       );
                                     }
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             context,
                                             MaterialPageRoute<void>(
                                               builder: (BuildContext context) =>
-                                                  const DashboardClientScreen(),
+                                                  const HomeClientScreen(),
                                             ),
                                           );
                                         }
@@ -310,6 +310,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 ],
               )),
-        ));
+        ),
+
+    );
   }
+
+
 }

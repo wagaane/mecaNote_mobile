@@ -53,7 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     },
     {
       'id': 2,
-      'label': 'Mécanicien motoriste',
+      'label': 'Mécanicien automobile généraliste',
       'code': 'MEC_MOT',
       'nomberOfClients': '10',
       'img': 'assets/motor.png'

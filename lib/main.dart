@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meca_note_mobile/auth/login_screen.dart';
 import 'package:meca_note_mobile/auth/register_screen.dart';
-import 'package:meca_note_mobile/back-office/client/dashboard_client_screen.dart';
+import 'package:meca_note_mobile/back-office/client/detail_garage_screen.dart';
+import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
 import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
 import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
@@ -114,20 +115,21 @@ class _MyAppState extends State<MyApp> {
           // '/demands': (context) => DetailsPage(),
         },
         home:
+        HomeClientScreen());
         // RegisterScreen());
-        _isLoading
-            ? Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/logo.png', width: 200,height: 200,),
-                    ],
-                  ),
-                ))
-            : _user == 'UNKNOW'  ? const UnknowUserScreen() : ( _isOk
-                ? (_isMecano ? const DashboardMecanoScreen() : const DashboardClientScreen())
-                : const WelcomeScreen()));
+        // _isLoading
+        //     ? Scaffold(
+        //         backgroundColor: Colors.white,
+        //         body: Center(
+        //           child: Column(
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             children: [
+        //               Image.asset('assets/logo.png', width: 200,height: 200,),
+        //             ],
+        //           ),
+        //         ))
+        //     : _user == 'UNKNOW'  ? const UnknowUserScreen() : ( _isOk
+        //         ? (_isMecano ? const DashboardMecanoScreen() : const HomeClientScreen())
+        //         : const WelcomeScreen()));
   }
 }
