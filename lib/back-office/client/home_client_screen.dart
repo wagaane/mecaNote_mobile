@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meca_note_mobile/back-office/client/detail_garage_screen.dart';
+import 'package:meca_note_mobile/back-office/client/notification_screen.dart';
 import 'package:meca_note_mobile/back-office/client/search_garage_screen.dart';
 import 'package:meca_note_mobile/back-office/profil/condition_utilisation_screen.dart';
 import 'package:meca_note_mobile/back-office/profil/configuration/configuration_screen.dart';
@@ -50,9 +51,11 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                         Row(
+                        Row(
                           children: [
-                            SizedBox(height: 40,),
+                            const SizedBox(
+                              height: 40,
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 15.0),
                               child: Text(
@@ -69,7 +72,8 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width / 2 + 130,
+                              width:
+                                  MediaQuery.of(context).size.width / 2 + 130,
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 15.0),
                                 child: Text(
@@ -81,17 +85,27 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    color: ColorWidget.blue,
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(100))),
-                                child: const Icon(
-                                  Icons.notifications_none,
-                                  color: Colors.white,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) => const NotificationScreen(),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: ColorWidget.blue,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(100))),
+                                  child: const Icon(
+                                    Icons.notifications_none,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             )
@@ -145,228 +159,256 @@ class HomeScreen extends StatelessWidget {
     super.key,
   });
 
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 2 - 20,
-                      height: MediaQuery.of(context).size.width / 2 - 50,
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/icons/mechanic.png",
-                            fit: BoxFit.contain,
-                            width: 50,
-                            color: ColorWidget.blue,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            "Mécano",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 20,
-                    height: MediaQuery.of(context).size.width / 2 - 50,
-                    padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/icons/team.png",
-                          fit: BoxFit.contain,
-                          width: 50,
-                          color: ColorWidget.blue,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Text(
-                          "Mes RDVs",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 2 - 20,
-                      height: MediaQuery.of(context).size.width / 2 - 50,
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/icons/mechanic.png",
-                            fit: BoxFit.contain,
-                            width: 50,
-                            color: ColorWidget.blue,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            "Mécano",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5.0,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2 - 20,
-                    height: MediaQuery.of(context).size.width / 2 - 50,
-                    padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/icons/team.png",
-                          fit: BoxFit.contain,
-                          width: 50,
-                          color: ColorWidget.blue,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Text(
-                          "Mes RDVs",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                "Plus proche de vous",
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-              ),
+            const SizedBox(
+              height: 10,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const SearchGarageScreen(),
+            Padding(
+              padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 2 - 20,
+                          height: MediaQuery.of(context).size.width / 2 - 50,
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "assets/icons/mechanic.png",
+                                fit: BoxFit.contain,
+                                width: 50,
+                                color: ColorWidget.blue,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text(
+                                "Top Garages",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        height: MediaQuery.of(context).size.width / 2 - 50,
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/icons/services.png",
+                              fit: BoxFit.contain,
+                              width: 50,
+                              color: ColorWidget.blue,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              "Services",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child:  Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Text(
-                  "Voir tout",
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16, color: ColorWidget.blackWithOpacityO5),
-                ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 14),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width / 2 - 10,
+                    padding: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Avis récents",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        SizedBox(
+                          height:
+                              110, // 🔧 Hauteur nécessaire pour que le ListView fonctionne
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 5,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(width: 10),
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  // action à définir
+                                },
+                                child: Container(
+                                  width:
+                                      250, // optionnel : largeur fixe pour les avis
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black26),
+                                    borderRadius:
+                                        BorderRadiusWidget.borderRadius10(),
+                                  ),
+                                  child: const Center(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Samba:",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          "Moussa a réparé mon moteur en 2h.",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "il y a 10 min",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontStyle: FontStyle.italic,
+                                                fontWeight: FontWeight.w100,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
+            const SizedBox(
+              height: 5,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "Plus proche de vous",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const SearchGarageScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadiusWidget.borderRadius10(),
+                        border: Border.all(
+                            color: ColorWidget.blue!.withOpacity(0.1))),
+                    margin: const EdgeInsets.only(right: 20),
+                    child: Center(
+                      child: Text(
+                        "voir tout",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: ColorWidget.blackWithOpacityO5),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+                height: MediaQuery.of(context).size.height / 2,
+                margin: const EdgeInsets.only(left: 15, right: 15),
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                // decoration: BoxDecoration(color: Colors.white),
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push<void>(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                const DetailGarageScreen(),
+                          ),
+                        );
+                      },
+                      child: GarageWidget.garageContainer(showImage: false,
+                          {"name": "Garage BMW", "note": 2, "distance": 3000},
+                          MediaQuery.of(context).size.width,
+                          MediaQuery.of(context).size.height),
+                    );
+                  },
+                )),
+            // SizedBox(height: 200,)
           ],
         ),
-        Container(
-            height: MediaQuery.of(context).size.height / 3,
-            margin: const EdgeInsets.only(left: 15, right: 15),
-            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-            // decoration: BoxDecoration(color: Colors.white),
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const DetailGarageScreen(),
-                        ),
-                      );
-                    },
-                    child:
-                        GarageWidget.garageContainer({"name": "Garage Touba"}));
-              },
-            )),
-        // SizedBox(height: 200,)
-      ],
+      ),
     );
   }
 }
@@ -430,14 +472,15 @@ class ProfileScreen extends StatelessWidget {
                       topLeft: Radius.circular(10)),
                 ),
                 child: ListTile(
-                  onTap:  () {
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const MyProfileScreen(),
-                      ),
-                    );
-                  },
+                    onTap: () {
+                      Navigator.push<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const MyProfileScreen(),
+                        ),
+                      );
+                    },
                     title: const Text("Mon profil"),
                     trailing: Container(
                       padding: PaddingWidget.padding5,
@@ -470,14 +513,15 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: ListTile(
-                  onTap: () {
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const ConfigurationScreen(),
-                      ),
-                    );
-                  },
+                    onTap: () {
+                      Navigator.push<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const ConfigurationScreen(),
+                        ),
+                      );
+                    },
                     title: const Text("Configuration"),
                     trailing: Container(
                       padding: PaddingWidget.padding5,
@@ -542,14 +586,15 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
                 child: ListTile(
-                  onTap: () {
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const ConditionUtilisationScreen(),
-                      ),
-                    );
-                  },
+                    onTap: () {
+                      Navigator.push<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const ConditionUtilisationScreen(),
+                        ),
+                      );
+                    },
                     title: const Text("Condition d'utilisation"),
                     trailing: Container(
                       padding: PaddingWidget.padding5,

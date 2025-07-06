@@ -6,10 +6,10 @@ import 'color_widget.dart';
 
 class GarageWidget{
 
-  static Container garageContainer(garage) {
+  static Container garageContainer(garage,w,h, {showImage = true}) {
     return Container(
         padding: const EdgeInsets.only(
-            left: 10, top: 20, bottom: 20),
+            left: 10, top: 10, bottom: 10),
         decoration: BoxDecoration(
             border: Border.all(color: ColorWidget.black12),
             color: ColorWidget.white,
@@ -38,7 +38,7 @@ class GarageWidget{
                               color: ColorWidget.blue,
                             )),
                         const SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
                         Text(
                           garage["name"],
@@ -50,6 +50,16 @@ class GarageWidget{
                     ),
                   ),
                 ),
+
+              ],
+            ),
+            const SizedBox(height: 5,),
+            showImage ? Image.asset("assets/img.png", width: w,height: 100,) : const SizedBox.shrink(),
+            showImage ?  const SizedBox(height: 5,): const SizedBox.shrink(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                NoteGarage.noteGarage(garage['note'] ?? 0),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Row(
@@ -59,16 +69,21 @@ class GarageWidget{
                         color: ColorWidget.blue,
                         size: 30,
                       ),
-                      const Text("100 m"),
+                      Text(_formatDistance(garage['distance'])),
                     ],
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 5,),
-            NoteGarage.noteGarage(1)
+            )
           ],
         ));
+  }
+
+  static String _formatDistance(int distance){
+    if(distance.toString().length >= 4){
+      return (distance / 1000).toString()+" Km";
+    }
+    return distance.toString()+" m";
   }
 
 }
