@@ -21,7 +21,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
         backgroundColor: Colors.white.withOpacity(0.9),
         elevation: 0,
         title: TitleWidget.setTitle("Configuration"),
-        leading: GoBackWidget.goBack(context),
+        leading: MyButtonWidget.goBack(context),
       ),
       body: Column(
         children: [

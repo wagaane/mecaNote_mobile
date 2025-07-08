@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:meca_note_mobile/models/profil_model.dart';
 import 'package:meca_note_mobile/services/auth_service.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
 import 'package:meca_note_mobile/services/reference_service.dart';
 import 'package:meca_note_mobile/utils/geolocation_helper.dart';
 import 'package:meca_note_mobile/utils/notification_helper.dart';
+import 'package:meca_note_mobile/welcome_screen.dart';
+import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
+import 'package:meca_note_mobile/widgets/go_back_widget.dart';
 
 import '../widgets/color_widget.dart';
 import 'login_screen.dart';
@@ -19,25 +23,12 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
-  final _prenom = TextEditingController();
-  final _nom = TextEditingController();
-  final _adresse = TextEditingController();
+  final _prenomNom = TextEditingController();
   final _telephone = TextEditingController();
-  bool _obscureText = true;
-  Map<String, bool> selectedSpecialities = {};
-  String? _selectedProfil;
+  final _nomGarage = TextEditingController();
   String locationMessage = "Position inconnue";
   late double _latitude;
   late double _longitude;
-  List<ProfilModel> _profiles = [];
-
-  _getListProfiles() async {
-    var profiles = ProfilModel.fromList(
-        (await ReferenceService.listProfiles())['payload']);
-    setState(() {
-      _profiles = profiles;
-    });
-  }
 
   Future<void> _determinePosition() async {
     var position = await GeolocationHelper.determinePosition();
@@ -45,13 +36,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _latitude = position.latitude;
       _longitude = position.longitude;
     });
+    print('latitude: $_latitude; longitude: $_longitude');
   }
 
   @override
   void initState() {
     super.initState();
     _determinePosition();
-    _getListProfiles();
   }
 
   @override
@@ -59,332 +50,622 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: IconButton(onPressed: () {
-
-          }, icon: Icon(Icons.arrow_back_ios, color: ColorWidget.blue,)),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-      ),
+          backgroundColor: Colors.white,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadiusWidget.borderRadius100(),
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 2),
+                      color: ColorWidget.blue,
+                      borderRadius: BorderRadiusWidget.borderRadius100()),
+                  child: Center(
+                      child: Text(
+                    "$_page",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w600),
+                  )),
+                ),
+              ),
+            ],
+          ),
+          leading:
+          GestureDetector(
+            onTap: () {
+              Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const WelcomeScreen(),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.only(left: 10, bottom: 10),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                  color: ColorWidget.blue?.withOpacity(0.1)),
+              child: const Icon(Icons.home_outlined),
+            ),
+          ),
+          elevation: 0.0,
+        ),
         body: SingleChildScrollView(
-
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 10),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-
-                  child: Image.asset(
-                    "assets/logo.png",
-                    fit: BoxFit.cover,
-                    width: 100,
-                  ),
+                Image.asset(
+                  "assets/logo.png",
+                  width: MediaQuery.of(context).size.height / 4,
                 ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                        ),
-                        color: Colors.blue),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: _prenom,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              labelStyle: TextStyle(color: ColorWidget.white),
-                              hintStyle: TextStyle(color: ColorWidget.white),
-                              prefixIcon: Icon(
-                                Icons.person_outline,
-                                color: ColorWidget.white,
-                              ),
-                              hintText: "Prénom",
-                              labelText: "Prénom",
-                              border: const OutlineInputBorder()),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          controller: _nom,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              labelStyle: TextStyle(color: ColorWidget.white),
-                              hintStyle: TextStyle(color: ColorWidget.white),
-                              prefixIcon: Icon(Icons.person_outline,
-                                  color: ColorWidget.white),
-                              hintText: "Nom",
-                              labelText: "Nom",
-                              border: const OutlineInputBorder()),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // TextField(
-                        //   controller: _adresse,
-                        //   style: const TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.w600),
-                        //   decoration: InputDecoration(
-                        //       enabledBorder: const OutlineInputBorder(
-                        //         borderSide: BorderSide(color: Colors.white),
-                        //       ),
-                        //       focusedBorder: const OutlineInputBorder(
-                        //           borderSide: BorderSide(color: Colors.white)),
-                        //       labelStyle: TextStyle(color: ColorWidget.white),
-                        //       hintStyle: TextStyle(color: ColorWidget.white),
-                        //       prefixIcon: Icon(Icons.location_on_outlined,
-                        //           color: ColorWidget.white),
-                        //       hintText: "Adresse",
-                        //       labelText: "Adresse",
-                        //       border: const OutlineInputBorder()),
-                        // ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          controller: _telephone,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              labelStyle: TextStyle(color: ColorWidget.white),
-                              hintStyle: TextStyle(color: ColorWidget.white),
-                              prefixIcon: Icon(
-                                Icons.phone_outlined,
-                                color: ColorWidget.white,
-                              ),
-                              hintText: "Téléphone",
-                              labelText: "Téléphone",
-                              border: const OutlineInputBorder()),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        DropdownButtonFormField<dynamic>(
-                          dropdownColor: Colors.blue.withOpacity(0.3),
-                          style: TextStyle(
-                              color: ColorWidget.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white)),
-                            labelStyle: TextStyle(color: ColorWidget.white),
-                            hintStyle: TextStyle(color: ColorWidget.white),
-                            prefixIcon:
-                                Icon(Icons.work_outline, color: ColorWidget.white),
-                            labelText: 'S\'inscrire en tant que ',
-                            border: const OutlineInputBorder(),
-                          ),
-                          value: _selectedProfil,
-                          items: _profiles.map((ProfilModel value) {
-                            return DropdownMenuItem<dynamic>(
-                              value: value.code,
-                              child: Text(value.label),
-                            );
-                          }).toList(),
-                          onChanged: (dynamic newValue) {
-                            setState(() {
-                              print(newValue);
-                              _selectedProfil = newValue;
-                            });
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _email,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              labelStyle: TextStyle(color: ColorWidget.white),
-                              hintStyle: TextStyle(color: ColorWidget.white),
-                              prefixIcon: Icon(Icons.person_outline,
-                                  color: ColorWidget.white),
-                              hintText: "Email",
-                              labelText: "Email",
-                              border: const OutlineInputBorder()),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-
-                          obscureText: _obscureText,
-                          controller: _password,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _obscureText = !_obscureText;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    _obscureText
-                                        ? Icons.visibility
-                                        : Icons.visibility_off, color: Colors.white,
-                                  )),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              labelStyle: TextStyle(color: ColorWidget.white),
-                              hintStyle: TextStyle(color: ColorWidget.white),
-                              prefixIcon:
-                                  Icon(Icons.password, color: ColorWidget.white),
-                              hintText: "Mot de passe",
-                              labelText: "Mot de passe",
-                              border: const OutlineInputBorder()),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            List<String> newSelectedSpecialities = [];
-                            selectedSpecialities.forEach(
-                              (key, value) {
-                                newSelectedSpecialities.add(key);
-                              },
-                            );
-                            var data = {
-                              'prenom': _prenom.text.trim(),
-                              'nom': _nom.text.trim(),
-                              'adresse': _adresse.text.trim() ?? '',
-                              'telephone': _telephone.text.trim(),
-                              'email': _email.text.trim(),
-                              'password': _password.text.trim(),
-                              'profile': _selectedProfil ?? '',
-                              'latitude': _latitude.toString(),
-                              'longitude': _longitude.toString(),
-                              'token': ''
-                            };
-
-                            var response = await AuthService.register(data);
-                            print(response);
-                            if (response['data']['status'] == 'OK') {
-                              var token =
-                                  await PushNotificationService.getDeviceToken();
-                              PushNotificationService.sendOtp(token);
-                              NotificationHelper.success(
-                                  context, response['data']['message']);
-                              Navigator.push<void>(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      const LoginScreen(),
-                                ),
-                              );
-                            } else {
-                              NotificationHelper.error(
-                                  context, response['data']['message']);
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            width: MediaQuery.of(context).size.width - 10,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.white.withOpacity(0.5)),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: ColorWidget.blue),
-                            child: Center(
-                              child: Text(
-                                "s'inscrire",
-                                style: TextStyle(
-                                    color: ColorWidget.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-
-                            GestureDetector(
-                              onTap: () {
-                              },
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(100))
-                                ),
-                                child: Image.asset('assets/icons/google.png',fit: BoxFit.cover,),
-                              ),
-                            ),
-                            const SizedBox(width: 10,),
-                            GestureDetector(
-                              onTap: () {
-                              },
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(100))
-                                ),
-                                child: Image.asset('assets/icons/facebook.png',fit: BoxFit.contain,color: ColorWidget.blue,),
-                              ),
-                            ),
-                          ],
-                        )
-
-                      ],
+                Text(
+                  _titrePage,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                _renderedPage(_page),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        print('Prev');
+                        if (_page > 1) {
+                          setState(() {
+                            _page = _page - 1;
+                          });
+                          changeTitle();
+                        }
+                      },
+                      child: _buttonPrec(),
                     ),
-                  ),
+                    _page == 3
+                        ? Container(
+                      padding: const EdgeInsets.all(10),
+                            // width: 80,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadiusWidget.borderRadius10(),
+                              color: ColorWidget.blue,
+                            ),
+                            child: const Center(child: Text("S'inscrire", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),)),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              print('$_isActifC $_isActifG');
+                              print('Suiv');
+                              if (_page < 3) {
+                                if (_page == 1 && !_isActifG && !_isActifC) {
+                                  NotificationHelper.error(
+                                      context, "Veuillez choisir un profil");
+                                } else {
+                                  if(_page == 2){
+                                    if(_nomGarage.text == '' || _prenomNom.text == '' || _email.text == '' || _password.text == ''){
+                                      NotificationHelper.error(context, "Veuillez renseigner tous les champs svp.");
+
+                                    }else{
+                                      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                                      if (!emailRegex.hasMatch(_email.text)) {
+                                        NotificationHelper.success(context, "Saisissez un mail valide.");
+                                      }else{
+                                        setState(() {
+                                          _page = _page + 1;
+                                        });
+                                        changeTitle();
+                                      }
+                                    }
+
+                                  }else{
+                                    setState(() {
+                                      _page = _page + 1;
+                                    });
+                                    changeTitle();
+                                  }
+
+                                }
+                              }
+                            },
+                            child: _buttonSuiv(),
+                          )
+                  ],
                 ),
+                const SizedBox(
+                  height: 8,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const LoginScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadiusWidget.borderRadius05(),
+                          border: Border.all(color: ColorWidget.blue!, width: 0.2)),
+                      child: Center(
+                          child: Text(
+                            "Vous avez déjà un compte ? Connectez-vous.",
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.black.withOpacity(0.6)),
+                          ))),
+                )
               ],
             ),
           ),
         ));
   }
+
+  void changeTitle() {
+    switch (_page) {
+      case 1:
+        setState(() {
+          _titrePage = 'Quel est votre profil ?';
+        });
+        break;
+      case 2:
+        setState(() {
+          _titrePage = 'Renseigner les informations';
+        });
+        break;
+      case 3:
+        setState(() {
+          _titrePage = 'Récapitulation';
+        });
+        break;
+    }
+  }
+
+  int _page = 1;
+  String _titrePage = "Quel est votre profil ?";
+  bool _obscure = true;
+
+  Widget _renderedPage(page) {
+    switch (page) {
+      case 1:
+        return _page_1();
+      case 2:
+        return _page_2();
+      case 3:
+        return _page_3();
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  Column _page_3() {
+    return Column(
+      children: [
+        _isActifG
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Nom Garage "),
+                  Text(_nomGarage.text),
+                ],
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const SizedBox(
+                height: 10,
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const SizedBox(
+                height: 10,
+              )
+            : const SizedBox.shrink(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Prénom & Nom"),
+            Text(_prenomNom.text),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Divider(),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Téléphone"),
+            Text(_telephone.text),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Divider(),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("E-mail "),
+            Text(_email.text),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Divider(),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Mot de passe "),
+            Text("********"),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column _page_2() {
+    return Column(
+      children: [
+        _isActifG
+            ? TextField(
+                controller: _nomGarage,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.garage_outlined,
+                    color: ColorWidget.blue,
+                  ),
+                  hintText: "Nom garage",
+                  hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w100),
+                  border: OutlineInputBorder(
+                    // Default border
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // When not focused
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    // When focused (clicked)
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+        const SizedBox(
+          height: 5,
+        ),
+        TextField(
+          controller: _prenomNom,
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.contact_page_outlined,
+              color: ColorWidget.blue,
+            ),
+            hintText: "Prénom & Nom",
+            hintStyle: const TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w100),
+            border: OutlineInputBorder(
+              // Default border
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              // When not focused
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // When focused (clicked)
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                  color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        TextField(
+
+          controller: _telephone,
+          inputFormatters: [
+            // Optional: block non-digit input
+            FilteringTextInputFormatter.digitsOnly,
+          ],
+          keyboardType: TextInputType.number,
+
+          onChanged: (value) {
+            if(_telephone.text.length >= 9){
+              _telephone.text = _telephone.text.substring(0,9);
+              NotificationHelper.success(context, "Numéro de téléphone ne doit pas dépasser 9 caractères.");
+            }
+          },
+
+          decoration: InputDecoration(
+
+            prefixIcon:  SizedBox(
+              width: 30,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Row(
+                  children: [
+                    Text("+221", style: TextStyle(color: ColorWidget.blue, fontWeight: FontWeight.w600, fontSize: 14),)
+                  ],
+                ),
+              ),
+            ),
+            hintText: "Téléphone",
+            hintStyle: const TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w100),
+            border: OutlineInputBorder(
+              // Default border
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              // When not focused
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // When focused (clicked)
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                  color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+
+        TextField(
+
+          keyboardType: TextInputType.emailAddress,
+          controller: _email,
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.email_outlined,
+              color: ColorWidget.blue,
+            ),
+            hintText: "E-mail",
+            hintStyle: const TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w100),
+            border: OutlineInputBorder(
+              // Default border
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              // When not focused
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // When focused (clicked)
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                  color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        TextField(
+          controller: _password,
+          obscureText: _obscure,
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.lock_outline,
+              color: ColorWidget.blue,
+            ),
+
+            suffixIcon: IconButton(
+              icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
+              onPressed: () {
+                setState(() {
+                  _obscure = !_obscure;
+                });
+              },
+            ),
+            // labelText: 'Nom Garage',
+            hintText: "Mot de passe",
+            hintStyle: const TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w100),
+            border: OutlineInputBorder(
+              // Default border
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              // When not focused
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // When focused (clicked)
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                  color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Center _page_1() {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isActifG = !_isActifG;
+                  _isActifC = false;
+                });
+              },
+              child: buttonTypeProfil("Garagiste".toUpperCase(), _isActifG),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isActifG = false;
+                  _isActifC = !_isActifC;
+                });
+              },
+              child: buttonTypeProfil("Client".toUpperCase(), _isActifC),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool _isActifG = false;
+  bool _isActifC = false;
+  Container buttonTypeProfil(testButton, isActif) {
+    return Container(
+      height: 80,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: ColorWidget.blue!, width: 0.5),
+          color: isActif
+              ? ColorWidget.blue
+              : ColorWidget.black12?.withOpacity(0.5),
+          borderRadius: BorderRadiusWidget.borderRadius10()),
+      child: Center(
+          child: Text(
+        "$testButton",
+        style: const TextStyle(
+            color:
+                 Colors.white
+            ,
+            fontWeight: FontWeight.w600,
+            fontSize: 18),
+      )),
+    );
+  }
+
+  ClipPath _buttonPrec() {
+    return ClipPath(
+      clipper: LeftArrowClipper(),
+      child: Container(
+        width: 80,
+        height: 50,
+        color: _page == 1 ? Colors.blue.withOpacity(0.6) : Colors.blue,
+        alignment: Alignment.center,
+        child: const Icon(Icons.arrow_back, color: Colors.white),
+      ),
+    );
+  }
+
+  ClipPath _buttonSuiv() {
+    return ClipPath(
+      clipper: ArrowClipper(),
+      child: Container(
+        width: 80,
+        height: 50,
+        color: Colors.blue,
+        alignment: Alignment.center,
+        child: const Icon(Icons.arrow_forward, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class ArrowClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double h = size.height;
+    double w = size.width;
+
+    final path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(w - h / 2, 0);
+    path.lineTo(w, h / 2);
+    path.lineTo(w - h / 2, h);
+    path.lineTo(0, h);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+class LeftArrowClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double h = size.height;
+    double w = size.width;
+
+    final path = Path();
+    path.moveTo(h / 2, 0); // pointe gauche en haut
+    path.lineTo(w, 0); // coin droit haut
+    path.lineTo(w, h); // coin droit bas
+    path.lineTo(h / 2, h); // pointe gauche bas
+    path.lineTo(0, h / 2); // triangle flèche vers la gauche
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

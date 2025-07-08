@@ -22,7 +22,7 @@ class _EditMotDePasseScreenState extends State<EditMotDePasseScreen> {
         backgroundColor: Colors.white.withOpacity(0.9),
         elevation: 0,
         title: TitleWidget.setTitle("Modifier mot de passe"),
-        leading: GoBackWidget.goBack(context),
+        leading: MyButtonWidget.goBack(context),
       ),
       body: SingleChildScrollView(
         child: Padding(

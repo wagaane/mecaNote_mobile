@@ -45,7 +45,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         backgroundColor: Colors.white.withOpacity(0.9),
         elevation: 0,
         title: TitleWidget.setTitle("Modifier mon profil"),
-        leading: GoBackWidget.goBack(context),
+        leading: MyButtonWidget.goBack(context),
       ),
       body: SingleChildScrollView(
         child: Padding(

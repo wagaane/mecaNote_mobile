@@ -19,7 +19,7 @@ class _ConditionUtilisationScreenState extends State<ConditionUtilisationScreen>
         backgroundColor: Colors.white.withOpacity(0.9),
         elevation: 0,
         title: TitleWidget.setTitle("Conditions d'utilisation"),
-        leading: GoBackWidget.goBack(context),
+        leading: MyButtonWidget.goBack(context),
       ),
       body:  SingleChildScrollView(
         child: Container(

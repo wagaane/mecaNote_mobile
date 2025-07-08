@@ -37,7 +37,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         backgroundColor: Colors.white.withOpacity(0.9),
         elevation: 0,
         title: TitleWidget.setTitle("Mes notifications"),
-        leading: GoBackWidget.goBack(context),
+        leading: MyButtonWidget.goBack(context),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0,left: 20, right: 20),
@@ -46,12 +46,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
           child: ListView.separated(itemBuilder: (context, index) {
             var notification = _notifications[index];
             return Container(
-
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadiusWidget.borderRadius10()),
               child: ListTile(
-                leading: const Icon(Icons.notifications_active),
+                leading: MyButtonWidget.paddingIcon(const Icon(Icons.notifications_active)),
                 title: Text("${notification['contenue']}"),
-                trailing: const Icon(Icons.arrow_forward_ios),
+                // trailing: const Icon(Icons.arrow_forward_ios),
               ),
             );
           },

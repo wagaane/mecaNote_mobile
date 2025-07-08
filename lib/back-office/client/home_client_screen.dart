@@ -4,7 +4,6 @@ import 'package:meca_note_mobile/back-office/client/notification_screen.dart';
 import 'package:meca_note_mobile/back-office/client/search_garage_screen.dart';
 import 'package:meca_note_mobile/back-office/profil/condition_utilisation_screen.dart';
 import 'package:meca_note_mobile/back-office/profil/configuration/configuration_screen.dart';
-import 'package:meca_note_mobile/back-office/profil/configuration/edit_mot_de_passe_screen.dart';
 import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
 import 'package:meca_note_mobile/widgets/color_widget.dart';
 import 'package:meca_note_mobile/widgets/garage_widget.dart';
@@ -43,8 +42,8 @@ class _HomeClientScreenState extends State<HomeClientScreen> {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
                     ),
                   ),
                   child: SafeArea(
@@ -346,7 +345,7 @@ class HomeScreen extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    "Plus proche de vous",
+                    "Proche de vous",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ),
@@ -361,17 +360,17 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadiusWidget.borderRadius10(),
                         border: Border.all(
-                            color: ColorWidget.blue!.withOpacity(0.1))),
+                            color: ColorWidget.blue!.withOpacity(0.2))),
                     margin: const EdgeInsets.only(right: 20),
                     child: Center(
                       child: Text(
-                        "voir tout",
+                        "Voir plus",
                         style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             fontSize: 16,
                             color: ColorWidget.blackWithOpacityO5),
                       ),

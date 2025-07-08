@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConfig{
-  static String baseUrl = "http://192.168.100.175:9002/api/v1/mecanote/";
-  // static String baseUrl = "http://192.168.100.131:9001/api/v1/mecanote/";
+  static String baseUrl = "http://192.168.10.48:9002/api/v1/mecanote/";
+  // static String baseUrl = "http://192.168.1.214:9001/api/v1/mecanote/";
   // static String baseUrl = "http://192.168.10.12:9000/api/v1/mecanote/";
   // static String baseUrl = "http://192.168.1.63:9000/api/v1/mecanote/";
   // static String baseUrl = "http://10.0.0.2:9000/api/v1/mecanote/";

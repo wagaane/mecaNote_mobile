@@ -11,6 +11,7 @@ import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
 import 'package:meca_note_mobile/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initApp();
+
   }
 
   String _user = '';
@@ -62,6 +64,8 @@ class _MyAppState extends State<MyApp> {
       _isLoading = true;
     });
 
+    // SharedPreferences pred = await SharedPreferences.getInstance();
+    // pred.clear();
     await Future.delayed(const Duration(seconds: 5));
 
     var token = await ApiConfig.getToken();
@@ -115,8 +119,8 @@ class _MyAppState extends State<MyApp> {
           // '/demands': (context) => DetailsPage(),
         },
         home:
-        HomeClientScreen());
-        // RegisterScreen());
+        // HomeClientScreen());
+        LoginScreen());
         // _isLoading
         //     ? Scaffold(
         //         backgroundColor: Colors.white,

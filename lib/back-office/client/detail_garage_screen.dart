@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meca_note_mobile/back-office/map_screen.dart';
 import 'package:meca_note_mobile/utils/phone_number_call.dart';
 import 'package:meca_note_mobile/utils/whatsappp_contact_utils.dart';
 import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
@@ -24,7 +25,7 @@ class _DetailGarageScreenState extends State<DetailGarageScreen> {
       backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
         title: TitleWidget.setTitle("Détails du garage"),
-        leading: GoBackWidget.goBack(context),
+        leading: MyButtonWidget.goBack(context),
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -165,6 +166,14 @@ class _DetailGarageScreenState extends State<DetailGarageScreen> {
                           ),
                         ),
                         GestureDetector(
+                          onTap: () {
+                            Navigator.push<void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>  MapScreen(),
+                              ),
+                            );
+                          },
                           child: Container(
                             width: W / 2 - 65,
                             padding: const EdgeInsets.all(10),
@@ -211,9 +220,6 @@ class _DetailGarageScreenState extends State<DetailGarageScreen> {
                         ),
                       ],
                     ),
-                    // const SizedBox(
-                    //   height: 5,
-                    // ),
                     SizedBox(
                       height: H / 5,
                       child: ListView.builder(

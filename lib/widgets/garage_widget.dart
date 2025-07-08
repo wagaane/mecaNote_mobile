@@ -9,7 +9,7 @@ class GarageWidget{
   static Container garageContainer(garage,w,h, {showImage = true}) {
     return Container(
         padding: const EdgeInsets.only(
-            left: 10, top: 10, bottom: 10),
+            left: 5, top: 5, bottom: 5),
         decoration: BoxDecoration(
             border: Border.all(color: ColorWidget.black12),
             color: ColorWidget.white,
@@ -44,7 +44,7 @@ class GarageWidget{
                           garage["name"],
                           style: const TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w600),
+                              fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -53,7 +53,7 @@ class GarageWidget{
 
               ],
             ),
-            const SizedBox(height: 5,),
+            const SizedBox(height: 2,),
             showImage ? Image.asset("assets/img.png", width: w,height: 100,) : const SizedBox.shrink(),
             showImage ?  const SizedBox(height: 5,): const SizedBox.shrink(),
             Row(
@@ -67,7 +67,7 @@ class GarageWidget{
                       Icon(
                         Icons.location_on,
                         color: ColorWidget.blue,
-                        size: 30,
+                        size: 20,
                       ),
                       Text(_formatDistance(garage['distance'])),
                     ],
