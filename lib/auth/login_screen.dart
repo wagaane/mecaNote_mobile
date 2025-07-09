@@ -149,6 +149,35 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20,
             ),
             GestureDetector(
+              onTap: () async {
+                var response  = await AuthService.login({"login":_email.text,"password":_password.text});
+                if(response['data']['status'] == 'OK'){
+                  await ApiConfig.setData(response);
+                  NotificationHelper.success(context, 'Connexion réussie.');
+                  if(response['data']['payload']['role'] == 'MECANO'){
+
+
+                  //   go to mecano
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const DashboardMecanoScreen(),
+                      ),
+                    );
+                  }else{
+                  //   got to client
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const HomeClientScreen(),
+                      ),
+                    );
+                  }
+                }else{
+                  NotificationHelper.error(context, 'Login et/ou mot de passe incorrecte..');
+                }
+                print('$response');
+              },
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadiusWidget.borderRadius05(),

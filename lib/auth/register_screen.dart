@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meca_note_mobile/auth/valider_register_screen.dart';
 import 'package:meca_note_mobile/models/profil_model.dart';
 import 'package:meca_note_mobile/services/auth_service.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
@@ -23,7 +24,9 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
-  final _prenomNom = TextEditingController();
+  final _prenom = TextEditingController();
+  final _nom = TextEditingController();
+  final _descriptionGarage = TextEditingController();
   final _telephone = TextEditingController();
   final _nomGarage = TextEditingController();
   String locationMessage = "Position inconnue";
@@ -60,8 +63,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   border: Border.all(color: Colors.blue, width: 2),
                 ),
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  width: 50,
+                  height: 50,
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.white, width: 2),
@@ -69,16 +72,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadiusWidget.borderRadius100()),
                   child: Center(
                       child: Text(
-                    "$_page",
+                    "$_page / 4",
                     style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w600),
+                        color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
                   )),
                 ),
               ),
             ],
           ),
-          leading:
-          GestureDetector(
+          leading: GestureDetector(
             onTap: () {
               Navigator.push<void>(
                 context,
@@ -108,7 +110,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Image.asset(
                   "assets/logo.png",
-                  width: MediaQuery.of(context).size.height / 4,
+                  width: MediaQuery.of(context).size.height / 5,
                 ),
                 Text(
                   _titrePage,
@@ -137,35 +139,96 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       child: _buttonPrec(),
                     ),
-                    _page == 3
-                        ? Container(
-                      padding: const EdgeInsets.all(10),
-                            // width: 80,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadiusWidget.borderRadius10(),
-                              color: ColorWidget.blue,
+                    _page == 4
+                        ? GestureDetector(
+                            onTap: () async {
+                              var data = {
+                                "prenom": _prenom.text,
+                                "nom": _nom.text,
+                                "telephone": _telephone.text,
+                                "email": _email.text,
+                                'password': _password.text,
+                                'profile': _isActifG ? "MECANO" : "CLIENT",
+                                'token': await PushNotificationService
+                                    .getDeviceToken(),
+                                'nomGarage': _nomGarage.text,
+                                'descriptionGarage': _descriptionGarage.text
+                              };
+
+                              print('$data');
+                              var response = await AuthService.register(data);
+                              if (response['data']['status'] == 'OK') {
+                                NotificationHelper.success(
+                                    context, response['data']['message']);
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>  ValiderRegisterScreen(email: _email.text,),
+                                  ),
+                                );
+
+                              } else {
+                                NotificationHelper.error(
+                                    context, response['data']['message']);
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              // width: 80,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusWidget.borderRadius10(),
+                                color: ColorWidget.blue,
+                              ),
+                              child: const Center(
+                                  child: Text(
+                                "S'inscrire",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16),
+                              )),
                             ),
-                            child: const Center(child: Text("S'inscrire", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),)),
                           )
                         : GestureDetector(
                             onTap: () {
                               print('$_isActifC $_isActifG');
                               print('Suiv');
-                              if (_page < 3) {
+                              if (_page < 4) {
                                 if (_page == 1 && !_isActifG && !_isActifC) {
                                   NotificationHelper.error(
                                       context, "Veuillez choisir un profil");
                                 } else {
-                                  if(_page == 2){
-                                    if(_nomGarage.text == '' || _prenomNom.text == '' || _email.text == '' || _password.text == ''){
-                                      NotificationHelper.error(context, "Veuillez renseigner tous les champs svp.");
+                                  if (_page == 2) {
+                                    if ((_nomGarage.text == '' && _isActifG) ||
+                                        _prenom.text == '' ||
+                                        _nom.text == '' ) {
+                                      NotificationHelper.error(context,
+                                          "Veuillez renseigner tous les champs svp.");
 
                                     }else{
-                                      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                                    // aa@yopmail.com
+                                    setState(() {
+                                      _page = _page + 1;
+                                    });
+                                    changeTitle();
+
+                                    }
+                                  }else if(_page == 3){
+                                    if ((_nomGarage.text == '' && _isActifG) ||
+                                        _email.text == '' ||
+                                        _telephone.text == '' ||
+                                        _password.text == '') {
+                                      NotificationHelper.error(context,
+                                          "Veuillez renseigner tous les champs svp.");
+                                    } else {
+                                      final emailRegex =
+                                      RegExp(r'^[^@]+@[^@]+\.[^@]+');
                                       if (!emailRegex.hasMatch(_email.text)) {
-                                        NotificationHelper.success(context, "Saisissez un mail valide.");
-                                      }else{
+                                        NotificationHelper.success(context,
+                                            "Saisissez un mail valide.");
+                                      } else {
                                         setState(() {
                                           _page = _page + 1;
                                         });
@@ -173,13 +236,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       }
                                     }
 
-                                  }else{
+                                  } else {
                                     setState(() {
                                       _page = _page + 1;
                                     });
                                     changeTitle();
                                   }
-
                                 }
                               }
                             },
@@ -188,7 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -204,14 +266,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadiusWidget.borderRadius05(),
-                          border: Border.all(color: ColorWidget.blue!, width: 0.2)),
+                          border:
+                              Border.all(color: ColorWidget.blue!, width: 0.2)),
                       child: Center(
                           child: Text(
-                            "Vous avez déjà un compte ? Connectez-vous.",
-                            style: TextStyle(
-                                fontSize: 12, color: Colors.black.withOpacity(0.6)),
-                          ))),
-                )
+                        "Vous avez déjà un compte ? Connectez-vous.",
+                        style: TextStyle(
+                            fontSize: 12, color: Colors.black.withOpacity(0.6)),
+                      ))),
+                ),
+                const SizedBox(
+                  height: 100,
+                ),
               ],
             ),
           ),
@@ -230,7 +296,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _titrePage = 'Renseigner les informations';
         });
         break;
-      case 3:
+        case 3:
+        setState(() {
+          _titrePage = 'Renseigner les informations';
+        });
+        break;
+      case 4:
         setState(() {
           _titrePage = 'Récapitulation';
         });
@@ -248,7 +319,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return _page_1();
       case 2:
         return _page_2();
-      case 3:
+        case 3:
+        return _page_4();
+      case 4:
         return _page_3();
       default:
         return const SizedBox.shrink();
@@ -283,11 +356,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 10,
               )
             : const SizedBox.shrink(),
+        _isActifG
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Description Garage "),
+                  Text(_descriptionGarage.text),
+                ],
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const SizedBox(
+                height: 10,
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const SizedBox(
+                height: 10,
+              )
+            : const SizedBox.shrink(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Prénom & Nom"),
-            Text(_prenomNom.text),
+            const Text("Prénom "),
+            Text(_prenom.text),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Divider(),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Nom "),
+            Text(_nom.text),
           ],
         ),
         const SizedBox(
@@ -380,17 +495,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               )
             : const SizedBox.shrink(),
-        const SizedBox(
-          height: 5,
-        ),
+        _isActifG
+            ? const SizedBox(
+                height: 5,
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? TextField(
+                controller: _descriptionGarage,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.garage_outlined,
+                    color: ColorWidget.blue,
+                  ),
+                  hintText: "Description Garage",
+                  hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w100),
+                  border: OutlineInputBorder(
+                    // Default border
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // When not focused
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    // When focused (clicked)
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+        _isActifG
+            ? const SizedBox(
+                height: 5,
+              )
+            : const SizedBox.shrink(),
         TextField(
-          controller: _prenomNom,
+          controller: _prenom,
           decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.contact_page_outlined,
               color: ColorWidget.blue,
             ),
-            hintText: "Prénom & Nom",
+            hintText: "Prénom",
             hintStyle: const TextStyle(
                 fontSize: 14, color: Colors.black, fontWeight: FontWeight.w100),
             border: OutlineInputBorder(
@@ -414,30 +568,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
           height: 5,
         ),
         TextField(
-
+          controller: _nom,
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.contact_page_outlined,
+              color: ColorWidget.blue,
+            ),
+            hintText: "Nom",
+            hintStyle: const TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w100),
+            border: OutlineInputBorder(
+              // Default border
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              // When not focused
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: ColorWidget.blue!.withOpacity(0.2)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // When focused (clicked)
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                  color: ColorWidget.blue!.withOpacity(0.4), width: 2),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+      ],
+    );
+  }
+  Column _page_4() {
+    return Column(
+      children: [
+        TextField(
           controller: _telephone,
           inputFormatters: [
             // Optional: block non-digit input
             FilteringTextInputFormatter.digitsOnly,
           ],
           keyboardType: TextInputType.number,
-
           onChanged: (value) {
-            if(_telephone.text.length >= 9){
-              _telephone.text = _telephone.text.substring(0,9);
-              NotificationHelper.success(context, "Numéro de téléphone ne doit pas dépasser 9 caractères.");
+            if (_telephone.text.length >= 9) {
+              _telephone.text = _telephone.text.substring(0, 9);
+              NotificationHelper.success(context,
+                  "Numéro de téléphone ne doit pas dépasser 9 caractères.");
             }
           },
-
           decoration: InputDecoration(
-
-            prefixIcon:  SizedBox(
+            prefixIcon: SizedBox(
               width: 30,
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Row(
                   children: [
-                    Text("+221", style: TextStyle(color: ColorWidget.blue, fontWeight: FontWeight.w600, fontSize: 14),)
+                    Text(
+                      "+221",
+                      style: TextStyle(
+                          color: ColorWidget.blue,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14),
+                    )
                   ],
                 ),
               ),
@@ -465,9 +658,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(
           height: 5,
         ),
-
         TextField(
-
           keyboardType: TextInputType.emailAddress,
           controller: _email,
           decoration: InputDecoration(
@@ -585,7 +776,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       height: 80,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(color: ColorWidget.blue!, width: 0.5),
+          border: Border.all(color: ColorWidget.blue!, width: 0.5),
           color: isActif
               ? ColorWidget.blue
               : ColorWidget.black12?.withOpacity(0.5),
@@ -594,11 +785,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Text(
         "$testButton",
         style: const TextStyle(
-            color:
-                 Colors.white
-            ,
-            fontWeight: FontWeight.w600,
-            fontSize: 18),
+            color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),
       )),
     );
   }

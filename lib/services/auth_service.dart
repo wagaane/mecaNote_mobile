@@ -255,4 +255,30 @@ class AuthService{
       };
     }
   }
+  static Future validerOtp(data) async{
+    try{
+      var url = Uri.parse('${ApiConfig.baseUrl}otp/validate');
+      String? token = await ApiConfig.getToken();
+
+      var headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+
+        // 'Authorization': "Bearer ${token!}" ?? '',
+      };
+
+      var response = await http.post(
+          url,
+          headers: headers,
+          body: jsonEncode(data)
+      );
+      return jsonDecode(utf8.decode(response.bodyBytes));
+    }catch(e){
+      return {
+        "status": 'EXCEPTION',
+        "message": 'Une erreur est survenue lors de la connexion.'
+      };
+    }
+  }
+
 }

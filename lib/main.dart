@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meca_note_mobile/auth/login_screen.dart';
 import 'package:meca_note_mobile/auth/register_screen.dart';
+import 'package:meca_note_mobile/auth/valider_register_screen.dart';
 import 'package:meca_note_mobile/back-office/client/detail_garage_screen.dart';
 import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
 import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
@@ -120,7 +121,7 @@ class _MyAppState extends State<MyApp> {
         },
         home:
         // HomeClientScreen());
-        LoginScreen());
+        WelcomeScreen());
         // _isLoading
         //     ? Scaffold(
         //         backgroundColor: Colors.white,
