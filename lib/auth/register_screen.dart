@@ -148,16 +148,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 "telephone": _telephone.text,
                                 "email": _email.text,
                                 'password': _password.text,
-                                'profile': _isActifG ? "MECANO" : "CLIENT",
+                                'profile': _isActifG ? "CHEFMECANO" : "CLIENT",
                                 'token': await PushNotificationService
                                     .getDeviceToken(),
                                 'nomGarage': _nomGarage.text,
-                                'descriptionGarage': _descriptionGarage.text
+                                'descriptionGarage': _descriptionGarage.text,
+                                'latitude': _latitude.toString(),
+                                'longitude': _longitude.toString()
                               };
 
-                              print('$data');
+                              print('CONNEXION');
                               var response = await AuthService.register(data);
+                              print('$response');
                               if (response['data']['status'] == 'OK') {
+                                print("CONNEXION REUSSIE");
                                 NotificationHelper.success(
                                     context, response['data']['message']);
                                 Navigator.push<void>(
@@ -168,6 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 );
 
                               } else {
+                                print('UNE ERREUR.');
                                 NotificationHelper.error(
                                     context, response['data']['message']);
                               }

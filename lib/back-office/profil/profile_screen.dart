@@ -69,7 +69,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   enabledBorder: OutlineInputBorder( // When not focused
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:  BorderSide(color: Colors.black54),
+                    borderSide:  const BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder( // When focused (clicked)
                     borderRadius: BorderRadius.circular(12),
@@ -89,7 +89,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   enabledBorder: OutlineInputBorder( // When not focused
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:  BorderSide(color: Colors.black54),
+                    borderSide:  const BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder( // When focused (clicked)
                     borderRadius: BorderRadius.circular(12),
@@ -108,7 +108,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   enabledBorder: OutlineInputBorder( // When not focused
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:  BorderSide(color: Colors.black54),
+                    borderSide:  const BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder( // When focused (clicked)
                     borderRadius: BorderRadius.circular(12),
@@ -129,7 +129,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   enabledBorder: OutlineInputBorder( // When not focused
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:  BorderSide(color: Colors.black54),
+                    borderSide:  const BorderSide(color: Colors.black54),
                   ),
                   focusedBorder: OutlineInputBorder( // When focused (clicked)
                     borderRadius: BorderRadius.circular(12),

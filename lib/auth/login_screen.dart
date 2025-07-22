@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meca_note_mobile/auth/register_screen.dart';
 import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
+import 'package:meca_note_mobile/back-office/mecanicien/home_mecano_screen.dart';
+import 'package:meca_note_mobile/back-office/mecanicien/old_version/dashboard_mecano_screen.dart';
 import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
 import 'package:meca_note_mobile/services/auth_service.dart';
@@ -30,7 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+
         elevation: 0,
        leading:  GestureDetector(
           onTap: () {
@@ -154,14 +158,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 if(response['data']['status'] == 'OK'){
                   await ApiConfig.setData(response);
                   NotificationHelper.success(context, 'Connexion réussie.');
-                  if(response['data']['payload']['role'] == 'MECANO'){
+                  if(response['data']['payload']['role'] == 'CHEFMECANO'){
 
 
                   //   go to mecano
                     Navigator.push<void>(
                       context,
                       MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const DashboardMecanoScreen(),
+                        builder: (BuildContext context) => const HomeMecanoScreen(),
                       ),
                     );
                   }else{

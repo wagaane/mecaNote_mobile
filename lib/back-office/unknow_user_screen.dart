@@ -6,7 +6,7 @@ import 'package:meca_note_mobile/utils/notification_helper.dart';
 import 'package:meca_note_mobile/widgets/color_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'mecanicien/dashboard_mecano_screen.dart';
+import 'mecanicien/old_version/dashboard_mecano_screen.dart';
 class UnknowUserScreen extends StatefulWidget {
   const UnknowUserScreen({super.key});
 

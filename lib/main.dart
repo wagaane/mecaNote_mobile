@@ -7,7 +7,8 @@ import 'package:meca_note_mobile/auth/register_screen.dart';
 import 'package:meca_note_mobile/auth/valider_register_screen.dart';
 import 'package:meca_note_mobile/back-office/client/detail_garage_screen.dart';
 import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
+import 'package:meca_note_mobile/back-office/mecanicien/home_mecano_screen.dart';
+import 'package:meca_note_mobile/back-office/mecanicien/old_version/dashboard_mecano_screen.dart';
 import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         _isOk = true;
       });
-      if (user == 'MECANO') {
+      if (user == 'CHEFMECANO') {
         setState(() {
           _isMecano = true;
         });
@@ -116,25 +117,23 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         // initialRoute: '/',
         routes: {
-          '/dashboard-mecano-demands': (context) => const DashboardMecanoScreen(),
-          // '/demands': (context) => DetailsPage(),
+          '/dashboard-mecano-demands': (context) => const HomeMecanoScreen(),
+          '/details-garage': (context) => DetailGarageScreen(),
         },
         home:
-        // HomeClientScreen());
-        WelcomeScreen());
-        // _isLoading
-        //     ? Scaffold(
-        //         backgroundColor: Colors.white,
-        //         body: Center(
-        //           child: Column(
-        //             mainAxisAlignment: MainAxisAlignment.center,
-        //             children: [
-        //               Image.asset('assets/logo.png', width: 200,height: 200,),
-        //             ],
-        //           ),
-        //         ))
-        //     : _user == 'UNKNOW'  ? const UnknowUserScreen() : ( _isOk
-        //         ? (_isMecano ? const DashboardMecanoScreen() : const HomeClientScreen())
-        //         : const WelcomeScreen()));
+        _isLoading
+            ? Scaffold(
+                backgroundColor: Colors.white,
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/logo.png', width: 200,height: 200,),
+                    ],
+                  ),
+                ))
+            : _user == 'UNKNOW'  ? const UnknowUserScreen() : ( _isOk
+                ? (_isMecano ? const HomeMecanoScreen() : const HomeClientScreen())
+                : const WelcomeScreen()));
   }
 }

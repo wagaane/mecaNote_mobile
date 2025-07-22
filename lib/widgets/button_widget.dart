@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ButtonWidget{
-
-
-  // static Container button(BuildContext context, {backgroundColor = Colors.blue[800]}){
+  //
+  //
+  // static Container button(BuildContext context, {backgroundColor = Coloo}){
   //   return Container(
   //       padding: const EdgeInsets.all(15),
   //       width: MediaQuery.of(context).size.width / 2,

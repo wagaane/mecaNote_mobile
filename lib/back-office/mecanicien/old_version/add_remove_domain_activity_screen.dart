@@ -1,11 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/dashboard_mecano_screen.dart';
+import 'package:meca_note_mobile/back-office/mecanicien/old_version/dashboard_mecano_screen.dart';
 import 'package:meca_note_mobile/models/domaine_mecano_model.dart';
 
-import '../../services/domaine_mecano_service.dart';
-import '../../utils/notification_helper.dart';
-import '../../widgets/color_widget.dart';
+import '../../../services/domaine_mecano_service.dart';
+import '../../../utils/notification_helper.dart';
+import '../../../widgets/color_widget.dart';
 
 class AddRemoveDomainActivityScreen extends StatefulWidget {
   final List<DomaineMecanoModel> services;

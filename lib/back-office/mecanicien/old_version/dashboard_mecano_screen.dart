@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/add_remove_domain_activity_screen.dart';
+import 'package:meca_note_mobile/back-office/mecanicien/old_version/add_remove_domain_activity_screen.dart';
 import 'package:meca_note_mobile/models/demand_model.dart';
 import 'package:meca_note_mobile/models/domaine_mecano_model.dart';
 import 'package:meca_note_mobile/models/enums/StatusEnum.dart';
@@ -12,7 +12,7 @@ import 'package:meca_note_mobile/welcome_screen.dart';
 import 'package:meca_note_mobile/widgets/color_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../services/demande_service.dart';
+import '../../../services/demande_service.dart';
 
 class DashboardMecanoScreen extends StatefulWidget {
   const DashboardMecanoScreen({super.key});

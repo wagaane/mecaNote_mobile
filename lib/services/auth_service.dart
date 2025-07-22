@@ -42,8 +42,8 @@ class AuthService{
   }
   // INSCRIPTION
   static Future register(data) async{
-
-    try{
+    print('${ApiConfig.baseUrl}$auth/${'register'}');
+    // try{
       var url = Uri.parse('${ApiConfig.baseUrl}$auth/${'register'}');
       String? token = await ApiConfig.getToken();
 
@@ -60,12 +60,12 @@ class AuthService{
         body: jsonEncode(data)
       );
       return jsonDecode(utf8.decode(response.bodyBytes));
-    }catch(e){
-      return {
-        "status": 'EXCEPTION',
-        "message": 'Une erreur est survenue lors de la connexion.'
-      };
-    }
+    // }catch(e){
+    //   return {
+    //     "status": 'EXCEPTION',
+    //     "message": 'Une erreur est survenue lors de la connexion.'
+    //   };
+    // }
 
   }
 
