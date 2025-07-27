@@ -6,9 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:global/global.dart' as http;
 
 class GarageService {
-  /**
-   * uploader un une image
-   */
+
   static Future<void> uploadImage(File imageFile, int id, String type) async {
     print('garage----- : $type');
     final uri = Uri.parse(
@@ -30,10 +28,6 @@ class GarageService {
       print('Image upload failed: ${response.statusCode}');
     }
   }
-
-  /**
-   *
-   */
   static Future<dynamic> saveGarage(data) async {
     final url = Uri.parse('${ApiConfig.baseUrl}garage/create');
 
@@ -56,8 +50,6 @@ class GarageService {
       return jsonDecode(response.body);
     }
   }
-
-
   static Future<dynamic> downloadFile(String fileName) async {
     final url = Uri.parse('${ApiConfig.baseUrl}file/download/0cf2a656-c2af-4a88-8fda-f5b9cf1d6356_20250721101648.1000035518.heic');
 
@@ -79,8 +71,8 @@ class GarageService {
       return jsonDecode(response.body);
     }
   }
-  static Future<dynamic> listGarages() async {
-    final url = Uri.parse('${ApiConfig.baseUrl}garage/list-garages?page=0&size=10');
+  static Future<dynamic> listGarages({page, size}) async {
+    final url = Uri.parse('${ApiConfig.baseUrl}garage/list-garages?page=$page&size=$size');
 
     final response = await http.get(
       url,

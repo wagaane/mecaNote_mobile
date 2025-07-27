@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:meca_note_mobile/back-office/map_screen.dart';
+import 'package:meca_note_mobile/models/garage_response.dart';
 import 'package:meca_note_mobile/utils/phone_number_call.dart';
 import 'package:meca_note_mobile/utils/whatsappp_contact_utils.dart';
 import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
@@ -7,16 +9,31 @@ import 'package:meca_note_mobile/widgets/color_widget.dart';
 import 'package:meca_note_mobile/widgets/go_back_widget.dart';
 import 'package:meca_note_mobile/widgets/title_widget.dart';
 
+import '../../config/api_config.dart';
 import '../../widgets/note_garage_widget.dart';
 
 class DetailGarageScreen extends StatefulWidget {
-  const DetailGarageScreen({super.key});
+  final garageResponse;
+  const DetailGarageScreen({super.key,   this.garageResponse});
 
   @override
   State<DetailGarageScreen> createState() => _DetailGarageScreenState();
 }
 
 class _DetailGarageScreenState extends State<DetailGarageScreen> {
+  late GarageResponse _garage;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _setGarage();
+  }
+  
+  _setGarage(){
+    setState(() {
+      _garage = widget.garageResponse;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     var H = MediaQuery.of(context).size.height;
@@ -41,7 +58,54 @@ class _DetailGarageScreenState extends State<DetailGarageScreen> {
                     color: Colors.white),
                 child: Column(
                   children: [
-                    Image.asset("assets/img.png"),
+                    CachedNetworkImage(
+                      width: MediaQuery.of(context)
+                          .size
+                          .width,
+                      height: 150,
+                      imageUrl:
+                      "${ApiConfig.baseUrl}file/download?filename=${_garage.file?.generatedName}",
+                      imageBuilder:
+                          (context, imageProvider) =>
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadiusWidget
+                                  .borderRadius05(),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                      placeholder: (context, url) =>
+                          Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  width: MediaQuery.of(
+                                      context)
+                                      .size
+                                      .width /
+                                      4,
+                                  height: MediaQuery.of(
+                                      context)
+                                      .size
+                                      .width /
+                                      4,
+                                  child:
+                                  CircularProgressIndicator(
+                                    color:
+                                    ColorWidget.blue,
+                                  )),
+                            ],
+                          ),
+                      errorWidget:
+                          (context, url, error) =>
+                      const Icon(Icons.error),
+                    ),
+
                     const SizedBox(
                       height: 10,
                     ),

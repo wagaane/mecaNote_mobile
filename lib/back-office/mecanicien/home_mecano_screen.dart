@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meca_note_mobile/back-office/mecanicien/garages/list_garage_screen.dart';
+import 'package:meca_note_mobile/utils/notification_helper.dart';
 import 'package:meca_note_mobile/welcome_screen.dart';
 import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,6 +89,7 @@ class _HomeMecanoScreenState extends State<HomeMecanoScreen> {
                       onTap: () async{
                         SharedPreferences _pref = await SharedPreferences.getInstance();
                         _pref.clear();
+                        NotificationHelper.success(context, "Déconnexion réussie.");
                         Navigator.push<void>(
                           context,
                           MaterialPageRoute<void>(
@@ -198,31 +200,6 @@ class _HomeMecanoScreenState extends State<HomeMecanoScreen> {
                                     ],
                                   )),
                             ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     Navigator.push<void>(
-                            //       context,
-                            //       MaterialPageRoute<void>(
-                            //         builder: (BuildContext context) =>
-                            //             const NotificationScreen(),
-                            //       ),
-                            //     );
-                            //   },
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.only(right: 10.0),
-                            //     child: Container(
-                            //       padding: const EdgeInsets.all(5),
-                            //       decoration: BoxDecoration(
-                            //           color: ColorWidget.blue,
-                            //           borderRadius: const BorderRadius.all(
-                            //               Radius.circular(100))),
-                            //       child: const Icon(
-                            //         Icons.notifications_none,
-                            //         color: Colors.white,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // )
                           ],
                         )
                       ],

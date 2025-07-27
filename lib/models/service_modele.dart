@@ -1,4 +1,4 @@
-class DomaineMecanoModel {
+class ServiceModele {
   final int id;
   final String label;
   final String code;
@@ -7,7 +7,7 @@ class DomaineMecanoModel {
   final bool deleted;
    bool selected;
 
-  DomaineMecanoModel({
+  ServiceModele({
     required this.id,
     required this.label,
     required this.code,
@@ -17,8 +17,8 @@ class DomaineMecanoModel {
     required this.selected,
   });
 
-  factory DomaineMecanoModel.fromJson(Map<String, dynamic> json) {
-    return DomaineMecanoModel(
+  factory ServiceModele.fromJson(Map<String, dynamic> json) {
+    return ServiceModele(
       id: json['id'],
       label: json['label'],
       code: json['code'],
@@ -41,7 +41,7 @@ class DomaineMecanoModel {
     };
   }
 
-  static List<DomaineMecanoModel> fromList(List<dynamic> jsonList) {
-    return jsonList.map((json) => DomaineMecanoModel.fromJson(json)).toList();
+  static List<ServiceModele> fromList(List<dynamic> jsonList) {
+    return jsonList.map((json) => ServiceModele.fromJson(json)).toList();
   }
 }

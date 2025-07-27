@@ -1,31 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:meca_note_mobile/widgets/color_widget.dart';
 
 class NotificationHelper{
 
 
   static success(BuildContext context, msg){
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg, style: TextStyle(color: ColorWidget.white,fontSize: 16),),
+        duration: const Duration(seconds: 3),
         backgroundColor: Colors.blue[900],
-        textColor: Colors.white,
-        fontSize: 16.0,
+      ),
     );
   }
 
   static error(BuildContext context, msg){
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg, style: TextStyle(color: ColorWidget.white,fontSize: 16),),
+        duration: const Duration(seconds: 3),
         backgroundColor: Colors.red[900],
-        textColor: Colors.white,
-        fontSize: 16.0
+      ),
+    );
+  }
+  static warning(BuildContext context, msg){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg, style: TextStyle(color: ColorWidget.blue,fontSize: 16),),
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.yellow[300],
+      ),
     );
   }
 }

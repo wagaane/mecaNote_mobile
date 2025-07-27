@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meca_note_mobile/auth/valider_register_screen.dart';
-import 'package:meca_note_mobile/models/profil_model.dart';
 import 'package:meca_note_mobile/services/auth_service.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
-import 'package:meca_note_mobile/services/reference_service.dart';
+import 'package:meca_note_mobile/state-manager/auth_provider.dart';
 import 'package:meca_note_mobile/utils/geolocation_helper.dart';
 import 'package:meca_note_mobile/utils/notification_helper.dart';
+import 'package:meca_note_mobile/utils/utilis.dart';
 import 'package:meca_note_mobile/welcome_screen.dart';
 import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
-import 'package:meca_note_mobile/widgets/go_back_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/color_widget.dart';
 import 'login_screen.dart';
@@ -32,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String locationMessage = "Position inconnue";
   late double _latitude;
   late double _longitude;
+  bool _loading = false;
 
   Future<void> _determinePosition() async {
     var position = await GeolocationHelper.determinePosition();
@@ -50,6 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context,listen: false);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -100,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           elevation: 0.0,
         ),
-        body: SingleChildScrollView(
+        body: _loading ? Utils.loading() : SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width / 10),
@@ -142,6 +144,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _page == 4
                         ? GestureDetector(
                             onTap: () async {
+
+                              setState(() {
+                                _loading = true;
+                              });
+                              // DONNÉE D'INSCRIPTION
                               var data = {
                                 "prenom": _prenom.text,
                                 "nom": _nom.text,
@@ -157,25 +164,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 'longitude': _longitude.toString()
                               };
 
-                              print('CONNEXION');
-                              var response = await AuthService.register(data);
-                              print('$response');
-                              if (response['data']['status'] == 'OK') {
-                                print("CONNEXION REUSSIE");
-                                NotificationHelper.success(
-                                    context, response['data']['message']);
-                                Navigator.push<void>(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) =>  ValiderRegisterScreen(email: _email.text,),
-                                  ),
-                                );
+                              // INSCRIPTION
+                              await provider.register(data,context);
 
-                              } else {
-                                print('UNE ERREUR.');
-                                NotificationHelper.error(
-                                    context, response['data']['message']);
-                              }
+
+                              setState(() {
+                                _loading = false;
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.all(10),

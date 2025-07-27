@@ -1,7 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConfig{
-  static String baseUrl = "http://192.168.1.218:9002/api/v1/mecanote/";
+  // static String baseUrl = "http://192.168.1.218:9002/api/v1/mecanote/";
+  static String baseUrl = "http://192.168.100.71:9002/api/v1/mecanote/";
   // static String baseUrl = "http://192.168.1.214:9001/api/v1/mecanote/";
   // static String baseUrl = "http://192.168.10.12:9000/api/v1/mecanote/";
   // static String baseUrl = "http://192.168.1.63:9000/api/v1/mecanote/";
@@ -24,6 +25,7 @@ class ApiConfig{
   static Future<void> setData(response) async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("token", response['data']['payload']['token']);
+    preferences.setString("abonnement", response['data']['payload']['abonnement']);
     preferences.setString("username", response['data']['payload']['username']);
     preferences.setString("role", response['data']['payload']['role']);
   }
@@ -49,5 +51,10 @@ class ApiConfig{
   static Future<String> getRole() async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString('role') ?? '';
+  }
+
+  static Future<String> getAbonnement() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('abonnement') ?? '';
   }
 }

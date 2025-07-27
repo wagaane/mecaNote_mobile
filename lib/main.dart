@@ -2,24 +2,30 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:meca_note_mobile/auth/login_screen.dart';
-import 'package:meca_note_mobile/auth/register_screen.dart';
-import 'package:meca_note_mobile/auth/valider_register_screen.dart';
 import 'package:meca_note_mobile/back-office/client/detail_garage_screen.dart';
 import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
 import 'package:meca_note_mobile/back-office/mecanicien/home_mecano_screen.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/old_version/dashboard_mecano_screen.dart';
-import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
 import 'package:meca_note_mobile/config/api_config.dart';
 import 'package:meca_note_mobile/services/push_notification_service.dart';
+import 'package:meca_note_mobile/state-manager/auth_provider.dart';
+import 'package:meca_note_mobile/state-manager/garage_provider.dart';
 import 'package:meca_note_mobile/welcome_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await PushNotificationService.initialize();
-  runApp(const MyApp());
+
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => GarageProvider()),
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ],
+        child: const MyApp(),
+      )
+  );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
@@ -55,7 +61,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initApp();
-
   }
 
   String _user = '';
@@ -66,8 +71,6 @@ class _MyAppState extends State<MyApp> {
       _isLoading = true;
     });
 
-    // SharedPreferences pred = await SharedPreferences.getInstance();
-    // pred.clear();
     await Future.delayed(const Duration(seconds: 5));
 
     var token = await ApiConfig.getToken();
@@ -132,8 +135,8 @@ class _MyAppState extends State<MyApp> {
                     ],
                   ),
                 ))
-            : _user == 'UNKNOW'  ? const UnknowUserScreen() : ( _isOk
+            : _isOk
                 ? (_isMecano ? const HomeMecanoScreen() : const HomeClientScreen())
-                : const WelcomeScreen()));
+                : const WelcomeScreen());
   }
 }

@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:meca_note_mobile/auth/register_screen.dart';
-import 'package:meca_note_mobile/back-office/client/home_client_screen.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/home_mecano_screen.dart';
-import 'package:meca_note_mobile/back-office/mecanicien/old_version/dashboard_mecano_screen.dart';
-import 'package:meca_note_mobile/back-office/unknow_user_screen.dart';
-import 'package:meca_note_mobile/config/api_config.dart';
-import 'package:meca_note_mobile/services/auth_service.dart';
-import 'package:meca_note_mobile/utils/notification_helper.dart';
+import 'package:meca_note_mobile/state-manager/auth_provider.dart';
+import 'package:meca_note_mobile/utils/utilis.dart';
 import 'package:meca_note_mobile/widgets/border_radius_widget.dart';
 import 'package:meca_note_mobile/widgets/color_widget.dart';
-
-import '../services/push_notification_service.dart';
+import 'package:provider/provider.dart';
 import '../welcome_screen.dart';
-import '../widgets/go_back_widget.dart';
-import '../widgets/title_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -55,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: _loading ? Utils.loading() : SingleChildScrollView(
           child: SizedBox(
               child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -154,33 +147,14 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                var response  = await AuthService.login({"login":_email.text,"password":_password.text});
-                if(response['data']['status'] == 'OK'){
-                  await ApiConfig.setData(response);
-                  NotificationHelper.success(context, 'Connexion réussie.');
-                  if(response['data']['payload']['role'] == 'CHEFMECANO'){
-
-
-                  //   go to mecano
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const HomeMecanoScreen(),
-                      ),
-                    );
-                  }else{
-                  //   got to client
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const HomeClientScreen(),
-                      ),
-                    );
-                  }
-                }else{
-                  NotificationHelper.error(context, 'Login et/ou mot de passe incorrecte..');
-                }
-                print('$response');
+                setState(() {
+                  _loading = true;
+                });
+                var data = {"login":_email.text,"password":_password.text};
+                await provider.login(data, context);
+                setState(() {
+                  _loading = false;
+                });
               },
               child: Container(
                 decoration: BoxDecoration(
