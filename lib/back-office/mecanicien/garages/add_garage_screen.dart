@@ -118,10 +118,14 @@ class _AddGarageScreenState extends State<AddGarageScreen> {
                                  services.add(e);
                                },);
                              }else{
+
                                _services.forEach((e) {
                                  e.selected = true;
                                  services.add(e);
                                },);
+                               setState(() {
+                                 _dynamicText = "${services.length} service(s) choisi(s)";
+                               });
                              }
                              setStateModel(() {
                                _services = services;
